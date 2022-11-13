@@ -41,32 +41,6 @@ def login():
         return render_template('login.html')
 
 
-# def register():
-#     form = RegisterForm(request.form)
-#     if request.method == 'POST' and form.validate():
-#         name = form.name.data
-#         email = form.email.data
-#         username = form.username.data
-#         password = sha256_crypt.encrypt(str(form.password.data))
-
-#         # Create cursor
-#         cur = mysql.connection.cursor()
-
-#         # Execute Query
-#         cur.execute("INSERT into users(name, email, username, password) VALUES(%s,%s,%s,%s)",(name, email, username, password))
-
-#         #Commit to DB
-#         mysql.connection.commit()
-
-#         #close connection
-#         cur.close()
-
-#         #for flash messages taking parameter and the category of message to be flashed
-#         flash("You are now registered and can log in", "success")
-        
-#         #when registration is successful redirect to home
-#         return redirect(url_for('login'))
-#     return render_template('register.html', form = form)
 
 if __name__ == '__main__':
     
