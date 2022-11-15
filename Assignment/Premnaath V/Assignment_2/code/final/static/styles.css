@@ -1,0 +1,16 @@
+body{
+    color: black;
+}
+.center {
+    margin: auto;
+    width: 15%;
+}
+
+h2 {
+    text-align: center;
+}
+
+input {
+    border-radius: 5px;
+    padding: 7px;
+}
