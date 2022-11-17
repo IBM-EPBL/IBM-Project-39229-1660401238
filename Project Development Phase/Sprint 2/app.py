@@ -117,7 +117,32 @@ def logout():
 def inventoryUpdate():
     if request.method == "POST":
         try:
-           pass
+            item = request.form['item']
+            print("hello")
+            field = request.form['input-field']
+            value = request.form['input-value']
+            print(item, field, value)
+            insert_sql = 'UPDATE stocks SET ' + field + "= ?" + " WHERE NAME=?"
+            print(insert_sql)
+            pstmt = ibm_db.prepare(conn, insert_sql)
+            ibm_db.bind_param(pstmt, 1, value)
+            ibm_db.bind_param(pstmt, 2, item)
+            ibm_db.execute(pstmt)
+            if field == 'PRICE_PER_QUANTITY' or field == 'QUANTITY':
+                insert_sql = 'SELECT * FROM stocks WHERE NAME= ?'
+                pstmt = ibm_db.prepare(conn, insert_sql)
+                ibm_db.bind_param(pstmt, 1, item)
+                ibm_db.execute(pstmt)
+                dictonary = ibm_db.fetch_assoc(pstmt)
+                print(dictonary)
+                total = dictonary['QUANTITY'] * dictonary['PRICE_PER_QUANTITY']
+                insert_sql = 'UPDATE stocks SET TOTAL_PRICE=? WHERE NAME=?'
+                pstmt = ibm_db.prepare(conn, insert_sql)
+                ibm_db.bind_param(pstmt, 1, total)
+                ibm_db.bind_param(pstmt, 2, item)
+                ibm_db.execute(pstmt)
+        except Exception as e:
+            msg = e
 
         finally:
             
@@ -129,7 +154,17 @@ def addStocks():
     if request.method == "POST":
         print(request.form['item'])
         try:
-            pass
+            item = request.form['item']
+            quantity = request.form['quantity']
+            price = request.form['price']
+            total = int(price) * int(quantity)
+            insert_sql = 'INSERT INTO stocks (NAME,QUANTITY,PRICE_PER_QUANTITY,TOTAL_PRICE) VALUES (?,?,?,?)'
+            pstmt = ibm_db.prepare(conn, insert_sql)
+            ibm_db.bind_param(pstmt, 1, item)
+            ibm_db.bind_param(pstmt, 2, quantity)
+            ibm_db.bind_param(pstmt, 3, price)
+            ibm_db.bind_param(pstmt, 4, total)
+            ibm_db.execute(pstmt)
 
         except Exception as e:
             msg = e
@@ -144,7 +179,13 @@ def deleteStocks():
     if request.method == "POST":
         print(request.form['item'])
         try:
-            pass
+            item = request.form['item']
+            insert_sql = 'DELETE FROM stocks WHERE NAME=?'
+            pstmt = ibm_db.prepare(conn, insert_sql)
+            ibm_db.bind_param(pstmt, 1, item)
+            ibm_db.execute(pstmt)
+        except Exception as e:
+            msg = e
 
         finally:
             return redirect(url_for('dashboard'))
