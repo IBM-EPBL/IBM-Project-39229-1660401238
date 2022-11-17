@@ -101,9 +101,18 @@ def is_logged_in(f):
     return wrap
 
 @app.route('/dashboard')
-@is_logged_in #decorator
+@is_logged_in 
 def dashboard():
-    return render_template('dashboard.html')
+    sql = "SELECT * FROM stocks"
+    stmt = ibm_db.exec_immediate(conn, sql)
+    dictionary = ibm_db.fetch_assoc(stmt)
+    stocks = []
+    print(dictionary)
+    headings = [*dictionary]
+    while dictionary != False:
+        stocks.append(dictionary)
+        dictionary = ibm_db.fetch_assoc(stmt)
+    return render_template('dashboard.html',headings=headings, data=stocks)
 
 @app.route('/logout')
 @is_logged_in
