@@ -1,0 +1,65 @@
+{% extends 'dash_layout.html' %}
+
+{% block body %}
+     <!-- <h1>Dashboard </h1> -->
+     <!-- <small>Welcome {{session.username}}</small> -->
+        {% include 'includes/table.html' %}
+        <div class="forms-wrapper">
+          <form action="{{url_for('inventoryUpdate') }}" method="post">
+            <h3>Update Stock</h3>
+            <div class="field">
+              <label class="custom-label" for="item"> Enter Item</label>
+              <input class="text-inputs" type="text" name="item" placeholder="Laptop" />
+            </div>
+            <div class="field">
+              <label for="input-field">Choose a field :</label>
+              <select name="input-field" id="field">
+                <option value="NAME">NAME</option>
+                <option value="PRICE_PER_QUANTITY">PRICE_PER_QUANTITY</option>
+                <option value="QUANTITY">QUANTITY</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="custom-label" for="input-value"> Enter Value</label>
+              <input
+                class="text-inputs"
+                type="text"
+                name="input-value"
+                placeholder=" "
+              />
+            </div>
+            <button class="submit-button">Update</button>
+          </form>
+        
+          <form action="{{url_for('addStocks') }}" method="post">
+            <h3>Add New Stock</h3>
+            <div class="field">
+              <label class="custom-label" for="item"> Enter the item</label>
+              <input class="text-inputs" name="item" type="text" placeholder="LG TV" />
+            </div>
+            <div class="field">
+              <label class="custom-label" for="quantity"> Enter quantity</label>
+              <input
+                class="text-inputs"
+                type="number"
+                name="quantity"
+                placeholder="200"
+              />
+            </div>
+            <div class="field">
+              <label class="custom-label" for="price"> Enter price</label>
+              <input class="text-inputs" type="number" name="price" placeholder="25" />
+            </div>
+            <button class="submit-button">Add Stock</button>
+          </form>
+          <form action="{{url_for('deleteStocks') }}" method="post">
+            <h3>Remove stocks</h3>
+            <div class="field">
+              <label class="custom-label" for="item"> Enter the item</label>
+              <input class="text-inputs" name="item" type="text" placeholder="LG TV" />
+            </div>
+            <button class="submit-button red-button">Remove</button>
+          </form>
+        </div>
+        
+{% endblock %}
