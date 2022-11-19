@@ -18,8 +18,8 @@ except:
 
 
 def sendgridmail(user,TEXT):
-    sg = sendgrid.SendGridAPIClient(os.environ.get("SENDGRID_API_KEY"))
-    from_email = Email("nehanthkg@gmail.com")  
+    sg = sendgrid.SendGridAPIClient("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")
+    from_email = Email("inventorymanager523@gmail.com")  
     to_email = To(user)  
     subject = "Registered Successfully"
     content = Content("text/plain",TEXT)
