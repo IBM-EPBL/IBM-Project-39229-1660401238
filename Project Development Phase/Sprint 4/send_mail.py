@@ -1,10 +1,14 @@
 
 import sendgrid
 import os
+from dotenv import load_dotenv
+load_dotenv()
 from sendgrid.helpers.mail import Mail, Email, To, Content
 def sendgridmail(user,TEXT):
-    sg = sendgrid.SendGridAPIClient("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")
-    from_email = Email("inventorymanager523@gmail.com")  
+    print(os.getenv('SENDGRID_API_KEY'))
+    print(os.getenv('SENDGRID_FROM_EMAIL'))
+    sg = sendgrid.SendGridAPIClient(os.getenv('SENDGRID_API_KEY'))
+    from_email = Email(os.environ.get('SENDGRID_FROM_EMAIL')) 
     to_email = To(user)  
     subject = "Registered Successfully"
     content = Content("text/plain",TEXT)

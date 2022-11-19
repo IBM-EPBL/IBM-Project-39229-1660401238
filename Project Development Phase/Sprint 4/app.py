@@ -18,8 +18,8 @@ except:
 
 
 def sendgridmail(user,TEXT):
-    sg = sendgrid.SendGridAPIClient("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")
-    from_email = Email("inventorymanager523@gmail.com")  
+    sg = sendgrid.SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+    from_email = Email(os.environ.get('SENDGRID_FROM_EMAIL')) 
     to_email = To(user)  
     subject = "Registered Successfully"
     content = Content("text/plain",TEXT)
@@ -469,4 +469,4 @@ def profile():
 
 if __name__ == '__main__':
     
-    app.run(debug=True)
+    app.run(host="127.0.0.1",port=5000,debug=True)
