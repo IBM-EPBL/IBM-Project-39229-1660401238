@@ -1,0 +1,114 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Inventory Management System</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+    </head>
+    <style>
+        *{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins',sans-serif;
+    }
+    body{
+      background: #1abc9c;
+      overflow: hidden;
+    }
+    ::selection{
+      background: rgba(26,188,156,0.3);
+    }
+
+    .main{
+	position: relative;
+	height:60vh;
+	width:100%;
+	top: 15;
+	left:0;
+	right:0;
+    border: 2px solid darkblue;
+}
+    .main .heading{
+	position: absolute;
+	height:auto;
+	width:100%;
+	top:50%;
+	transform: translateY(-50%);
+	text-align: center;
+	text-shadow:0px 0.5px 5px rgba(0, 0, 0, 0.2);
+}
+.main .heading .head{
+	position: relative;
+	font-family: 'RacingSansOne',sans-serif;
+	font-size:48px;
+	font-weight: 600; 
+	color:#fff;
+}
+.main .heading .head span{
+	color:#017fb5;
+}
+.main .heading  .sub{
+	position: relative;
+	font-family: 'cinzel',sans-serif;
+	font-size:22px;
+	font-weight: 300; 
+	color:#fff;
+	margin:-2% 0 2% 0;
+}
+.main .heading .btns{
+	height:auto;
+	width:100%;
+	display: flex;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+}
+.main .heading .btns a{
+	color:#fff;
+	text-align: center;
+	text-decoration: none;
+	font-family:'cinzel',sans-serif;
+	font-size:15px;
+	font-weight:300;
+	display:block;
+	border:1px solid rgba(255, 255, 255, 0.5);
+	height:auto;
+	width:150px;
+	padding:10px;
+	display: flex;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+	margin-left:1%;
+	border-radius: 2px;
+	transition: 0.5s ease-in-out;
+}
+.main .heading .btns a:hover{
+	background:#017fb5;
+	border:1px solid #017fb5;
+}
+.main .heading .btns .btn1{
+	background:#017fb5;
+	border:1px solid #017fb5;
+}
+.main .heading .btns .btn2{
+	background: darkgreen;
+	border:1px solid darkgreen;
+}
+.main .heading .btns .btn1:hover{
+	background:#017fb5;
+	border:1px solid #017fb5 ;
+	color:rgba(255, 255, 255, 0.95);
+}
+    </style>
+    <body>
+        {% include 'includes/_navbar.html' %}
+        <div class="container mt-4">
+            {% include 'includes/_messages.html' %}
+            {% block body %}{% endblock %}
+        </div>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+    </body>
+</html>
