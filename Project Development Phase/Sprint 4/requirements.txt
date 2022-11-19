@@ -1,1 +1,4 @@
 Flask-WTF
+Flask
+sendgrid
+ibm_db
