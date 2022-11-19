@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: inv-service
+ labels:
+   app: inv-service
+   version: "1.0"
+spec:
+ replicas: 1
+ selector:
+  matchLabels:
+   app: inv-service
+ template:
+   metadata:
+   labels:
+    app: inv-service
+    version: "1.0"
+  spec:
+   containers:
+   - name: inv-service
+     image: "icr.io/ibm-inv/ibm-inv:ibm-inv"
+   ports:
+   - name: inv-http
+     containerPort: 5000
