@@ -3,15 +3,34 @@ from wtforms import Form, StringField, TextAreaField, PasswordField, validators,
 import ibm_db
 from functools import wraps
 from datetime import datetime, timedelta
+import sendgrid
+import os
+from sendgrid.helpers.mail import Mail, Email, To, Content
+
 
 app = Flask(__name__)
-app.secret_key = 'meow_cat'
+app.secret_key = 'kekcwcekqwodq'
 #IBM DB2 Connection
 try:
     conn = ibm_db.connect("DATABASE=bludb;HOSTNAME=b0aebb68-94fa-46ec-a1fc-1c999edb6187.c3n41cmd0nqnrk39u98g.databases.appdomain.cloud;PORT=31249;SECURITY=SSL;SSLServerCertificate=DigiCertGlobalRootCA.crt;UID=cqg39702;PWD=hIRRyoYSNHJxjqQq", "", "")
 except:
     print("Unable to connect: ", ibm_db.conn_error())
-#Home Page
+
+
+def sendgridmail(user,TEXT):
+    sg = sendgrid.SendGridAPIClient(os.environ.get("SENDGRID_API_KEY"))
+    from_email = Email("nehanthkg@gmail.com")  
+    to_email = To(user)  
+    subject = "Registered Successfully"
+    content = Content("text/plain",TEXT)
+    mail = Mail(from_email, to_email, subject, content)
+
+    # Get a JSON-ready representation of the Mail object
+    mail_json = mail.get()
+    # Send an HTTP POST request to /mail/send
+    response = sg.client.mail.send.post(request_body=mail_json)
+    print(response.status_code)
+    print(response.headers)
 
 
 @app.route('/')
@@ -54,6 +73,7 @@ def register():
             ibm_db.bind_param(prep_stmt, 3, password)
             ibm_db.bind_param(prep_stmt, 4, name)
             ibm_db.execute(prep_stmt)
+            sendgridmail(email, "Registered Successfully! Thank you for registering with us")
             flash(" Registration successful. Log in to continue !")
                
         #when registration is successful redirect to home
