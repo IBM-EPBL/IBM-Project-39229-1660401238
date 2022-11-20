@@ -1,5 +1,5 @@
 ##
-Video:            <a href="https://youtu.be/NiY1CfCZyao">    Demo Link</a><br>
+Video: <a href="https://youtu.be/NiY1CfCZyao"> Demo Link</a><br>
 Deployment on IBM Kubernetes: <a href="http://169.51.205.124:32595/">Deployment Link</a>
 
 <div align="center">
