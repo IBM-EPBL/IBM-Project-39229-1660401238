@@ -23,5 +23,5 @@ def sendgridmail(user,TEXT):
 
 
 if __name__ == '__main__':
-    sendgridmail('nehanthkg@gmail.com', "Registered Successfully")
+    sendgridmail('ssquarecsquare@gmail.com', "Registered Successfully")
     

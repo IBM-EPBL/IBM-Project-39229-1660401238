@@ -3,7 +3,23 @@
         <meta charset="utf-8">
         <title>Inventory Management System</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+        <link rel="icon" href="static/favicon.ico" type="image/x-icon"/>
     </head>
+    
+    <script>
+        window.watsonAssistantChatOptions = {
+          integrationID: "d9df04cb-fd39-4a12-ba42-0297bc9f1959", // The ID of this integration.
+          region: "au-syd", // The region your integration is hosted in.
+          serviceInstanceID: "9019e430-cc49-4e58-9c83-70b1ba47d15b", // The ID of your service instance.
+          onLoad: function(instance) { instance.render(); }
+        };
+        setTimeout(function(){
+          const t=document.createElement('script');
+          t.src="https://web-chat.global.assistant.watson.appdomain.cloud/versions/" + (window.watsonAssistantChatOptions.clientVersion || 'latest') + "/WatsonAssistantChatEntry.js";
+          document.head.appendChild(t);
+        });
+      </script>
+      
     <body>
         {% include 'includes/_navbar.html' %}
         <div class="container mt-4">
@@ -11,7 +27,8 @@
             {% block body %}{% endblock %}
         </div>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/> -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="static/css/style.css" />
     </body>
 </html>

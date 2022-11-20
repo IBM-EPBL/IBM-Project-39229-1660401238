@@ -1,65 +1,66 @@
 {% extends 'dash_layout.html' %}
-
+<!-- {% block head%}<title>Dashboard</title>{% endblock %} -->
 {% block body %}
-     <!-- <h1>Dashboard </h1> -->
-     <!-- <small>Welcome {{session.username}}</small> -->
-        {% include 'includes/table.html' %}
-        <div class="forms-wrapper">
-          <form action="{{url_for('inventoryUpdate') }}" method="post">
-            <h3>Update Stock</h3>
-            <div class="field">
-              <label class="custom-label" for="item"> Enter Item</label>
-              <input class="text-inputs" type="text" name="item" placeholder="Laptop" />
-            </div>
-            <div class="field">
-              <label for="input-field">Choose a field :</label>
-              <select name="input-field" id="field">
-                <option value="NAME">NAME</option>
-                <option value="PRICE_PER_QUANTITY">PRICE_PER_QUANTITY</option>
-                <option value="QUANTITY">QUANTITY</option>
-              </select>
-            </div>
-            <div class="field">
-              <label class="custom-label" for="input-value"> Enter Value</label>
-              <input
-                class="text-inputs"
-                type="text"
-                name="input-value"
-                placeholder=" "
-              />
-            </div>
-            <button class="submit-button">Update</button>
-          </form>
-        
-          <form action="{{url_for('addStocks') }}" method="post">
-            <h3>Add New Stock</h3>
-            <div class="field">
-              <label class="custom-label" for="item"> Enter the item</label>
-              <input class="text-inputs" name="item" type="text" placeholder="LG TV" />
-            </div>
-            <div class="field">
-              <label class="custom-label" for="quantity"> Enter quantity</label>
-              <input
-                class="text-inputs"
-                type="number"
-                name="quantity"
-                placeholder="200"
-              />
-            </div>
-            <div class="field">
-              <label class="custom-label" for="price"> Enter price</label>
-              <input class="text-inputs" type="number" name="price" placeholder="25" />
-            </div>
-            <button class="submit-button">Add Stock</button>
-          </form>
-          <form action="{{url_for('deleteStocks') }}" method="post">
-            <h3>Remove stocks</h3>
-            <div class="field">
-              <label class="custom-label" for="item"> Enter the item</label>
-              <input class="text-inputs" name="item" type="text" placeholder="LG TV" />
-            </div>
-            <button class="submit-button red-button">Remove</button>
-          </form>
-        </div>
-        
+
+
+  <h1>Dashboard</h1><hr>
+<div class="container">
+  <div class="row">
+      <div class="col-lg-5 col-sm-6">
+          <div class="card-box bg-blue">
+              <div class="inner">
+                  <h3> {{numstock}} </h3>
+                  <p> Stocks</p>
+              </div>
+              <div class="icon">
+                  <i class="fa fa-archive" aria-hidden="true"></i>
+              </div>
+              <a href="/stocks" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+      </div>
+
+      <div class="col-lg-5 col-sm-6">
+          <div class="card-box bg-green">
+              <div class="inner">
+                  <h3> ₹ {{totVal}} </h3>
+                  <p> Inventory Value </p>
+              </div>
+              <div class="icon">
+                  <i class="fa fa-money" aria-hidden="true"></i>
+              </div>
+              <a href="/stocks" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+      </div>
+      
+  </div>
+
+  <div class="row">
+    <div class="col-lg-5 col-sm-6">
+      <div class="card-box bg-orange">
+          <div class="inner">
+              <h3> {{numsupplier}} </h3>
+              <p> Suppliers </p>
+          </div>
+          <div class="icon">
+              <i class="fa fa-user-plus" aria-hidden="true"></i>
+          </div>
+          <a href="/suppliers" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
+      </div>
+  </div>
+  <div class="col-lg-5 col-sm-6">
+      <div class="card-box bg-red">
+          <div class="inner">
+              <h3> {{numorder}}</h3>
+              <p> Orders </p>
+          </div>
+          <div class="icon">
+              <i class="fa fa-credit-card"></i>
+          </div>
+          <a href="/orders" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
+      </div>
+  </div>
+  </div>
+ 
+</div>
+
 {% endblock %}

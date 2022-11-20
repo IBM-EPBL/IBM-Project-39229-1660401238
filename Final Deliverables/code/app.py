@@ -35,8 +35,6 @@ def sendgridmail(user,TEXT):
 
 @app.route('/')
 def index():
-    print(os.getenv('SENDGRID_API_KEY'))
-    print(os.getenv('SENDGRID_FROM_EMAIL'))
     return render_template('home.html')
 
 #Register Form Class
@@ -49,6 +47,7 @@ class RegisterForm(Form):
         validators.EqualTo('confirm', message='Passwords do not match')
     ])
     confirm = PasswordField('Confirm Password')
+
 #user register
 @app.route('/register', methods=['GET','POST'])
 def register():
@@ -59,16 +58,17 @@ def register():
         username = form.username.data
         password = str(form.password.data)
 
-        sql = "SELECT * FROM users WHERE email=?"
+        sql = "SELECT * FROM users WHERE username=?"
         prep_stmt = ibm_db.prepare(conn, sql)
-        ibm_db.bind_param(prep_stmt, 1, email)
+        ibm_db.bind_param(prep_stmt, 1, username)
         ibm_db.execute(prep_stmt)
         account = ibm_db.fetch_assoc(prep_stmt)
         print(account)
         if account:
             error = "Account already exists! Log in to continue !"
+            flash(error, 'danger')
         else:
-            insert_sql = "INSERT INTO users (email,username,password,name) values(?,?,?)"
+            insert_sql = "INSERT INTO users (email,username,password,firstname) values(?,?,?,?)"
             prep_stmt = ibm_db.prepare(conn, insert_sql)
             ibm_db.bind_param(prep_stmt, 1, email)
             ibm_db.bind_param(prep_stmt, 2, username)
@@ -124,8 +124,35 @@ def is_logged_in(f):
     return wrap
 
 @app.route('/dashboard')
-@is_logged_in 
 def dashboard():
+     sql = "SELECT COUNT(*) FROM stocks"
+     stmt = ibm_db.exec_immediate(conn, sql)
+     stock = ibm_db.fetch_both(stmt)
+     numstock=stock["1"]
+
+     sql = "SELECT COUNT(*) FROM orders"
+     stmt = ibm_db.exec_immediate(conn, sql)
+     order = ibm_db.fetch_both(stmt)
+     numorder=order['1']
+     
+     sql = "SELECT COUNT(*) FROM suppliers"
+     stmt = ibm_db.exec_immediate(conn, sql)
+     supplier = ibm_db.fetch_both(stmt)
+     numsupplier=supplier['1']
+
+     sql = "SELECT SUM(TOTAL_PRICE) FROM stocks"
+     stmt = ibm_db.exec_immediate(conn, sql)
+     totValAmt = ibm_db.fetch_both(stmt)
+     totVal=totValAmt['1']
+
+     
+     
+     
+     return render_template('dashboard.html', numstock = numstock, numorder = numorder ,numsupplier = numsupplier, totVal = totVal)
+
+@app.route('/stocks')
+@is_logged_in 
+def stocks():
     sql = "SELECT * FROM stocks"
     stmt = ibm_db.exec_immediate(conn, sql)
     dictionary = ibm_db.fetch_assoc(stmt)
@@ -135,7 +162,7 @@ def dashboard():
     while dictionary != False:
         stocks.append(dictionary)
         dictionary = ibm_db.fetch_assoc(stmt)
-    return render_template('dashboard.html',headings=headings, data=stocks)
+    return render_template('stocks.html',headings=headings, data=stocks)
 
 @app.route('/logout')
 @is_logged_in
@@ -159,7 +186,7 @@ def inventoryUpdate():
             pstmt = ibm_db.prepare(conn, insert_sql)
             ibm_db.bind_param(pstmt, 1, value)
             ibm_db.bind_param(pstmt, 2, item)
-            ibm_db.execute(pstmt)
+            res = ibm_db.execute(pstmt)
             if field == 'PRICE_PER_QUANTITY' or field == 'QUANTITY':
                 insert_sql = 'SELECT * FROM stocks WHERE NAME= ?'
                 pstmt = ibm_db.prepare(conn, insert_sql)
@@ -174,11 +201,12 @@ def inventoryUpdate():
                 ibm_db.bind_param(pstmt, 2, item)
                 ibm_db.execute(pstmt)
         except Exception as e:
+            print(e)
             msg = e
 
         finally:
             
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('stocks'))
 
 @app.route('/addstocks', methods=['POST'])
 @is_logged_in
@@ -203,7 +231,7 @@ def addStocks():
 
         finally:
 
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('stocks'))
 
 @app.route('/deletestocks', methods=['POST'])
 @is_logged_in
@@ -220,7 +248,7 @@ def deleteStocks():
             msg = e
 
         finally:
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('stocks'))
 
 
 @app.route('/update-user', methods=['POST', 'GET'])
@@ -236,7 +264,8 @@ def updateUser():
             ibm_db.bind_param(pstmt, 1, value)
             ibm_db.bind_param(pstmt, 2, email)
             print(pstmt)
-            ibm_db.execute(pstmt)
+            res = ibm_db.execute(pstmt)
+            print(res)
         except Exception as e:
             print(e)
             msg = e
@@ -273,7 +302,7 @@ def updatePassword():
             msg = e
         finally:
            
-            return render_template('result.html')
+            return render_template('dashboard.html')
 
 
 @app.route('/orders', methods=['POST', 'GET'])
@@ -310,7 +339,7 @@ def createOrder():
                     delivery.month) + "-" + str(delivery.day)
                 price = float(quantity) * \
                     float(dictionary['PRICE_PER_QUANTITY'])
-                query = 'INSERT INTO orders (STOCKS_ID,QUANTITY,DATE,DELIVERY_DATE,PRICE) VALUES (?,?,?,?,?)'
+                query = 'INSERT INTO orders (STOCKS_ID,QUANTITY,ORDER_DATE,DELIVERY_DATE,PRICE) VALUES (?,?,?,?,?)'
                 pstmt = ibm_db.prepare(conn, query)
                 ibm_db.bind_param(pstmt, 1, stock_id)
                 ibm_db.bind_param(pstmt, 2, quantity)
@@ -318,6 +347,9 @@ def createOrder():
                 ibm_db.bind_param(pstmt, 4, delivery_date)
                 ibm_db.bind_param(pstmt, 5, price)
                 ibm_db.execute(pstmt)
+            else:
+                print("Stock not found")
+                flash("Stock not found", "danger")
         except Exception as e:
             print(e)
 
@@ -333,7 +365,7 @@ def updateOrder():
             item = request.form['item']
             field = request.form['input-field']
             value = request.form['input-value']
-            query = 'UPDATE orders SET ' + field + "= ?" + " WHERE ID=?"
+            query = 'UPDATE orders SET ' + field + "= ?" + " WHERE ORDER_ID=?"
             pstmt = ibm_db.prepare(conn, query)
             ibm_db.bind_param(pstmt, 1, value)
             ibm_db.bind_param(pstmt, 2, item)
@@ -351,7 +383,7 @@ def cancelOrder():
     if request.method == "POST":
         try:
             order_id = request.form['order_id']
-            query = 'DELETE FROM orders WHERE ID=?'
+            query = 'DELETE FROM orders WHERE ORDER_ID=?'
             pstmt = ibm_db.prepare(conn, query)
             ibm_db.bind_param(pstmt, 1, order_id)
             ibm_db.execute(pstmt)
@@ -401,13 +433,14 @@ def UpdateSupplier():
             field = request.form['input-field']
             value = request.form['input-value']
             print(item, field, value)
-            insert_sql = 'UPDATE suppliers SET ' + field + "= ?" + " WHERE NAME=?"
+            insert_sql = 'UPDATE suppliers SET ' + field + "= ?" + " WHERE SUPPLIER_NAME=?"
             print(insert_sql)
             pstmt = ibm_db.prepare(conn, insert_sql)
             ibm_db.bind_param(pstmt, 1, value)
             ibm_db.bind_param(pstmt, 2, item)
             ibm_db.execute(pstmt)
         except Exception as e:
+            print(e)
             msg = e
 
         finally:
@@ -422,7 +455,6 @@ def addSupplier():
             name = request.form['name']
             order_id = request.form.get('order-id-select')
             print(order_id)
-            print("Hello world")
             location = request.form['location']
             insert_sql = 'INSERT INTO suppliers (supplier_name,ORDER_ID,LOCATION) VALUES (?,?,?)'
             pstmt = ibm_db.prepare(conn, insert_sql)
@@ -444,7 +476,7 @@ def deleteSupplier():
     if request.method == "POST":
         try:
             item = request.form['name']
-            insert_sql = 'DELETE FROM suppliers WHERE NAME=?'
+            insert_sql = 'DELETE FROM suppliers WHERE SUPPLIER_NAME=?'
             pstmt = ibm_db.prepare(conn, insert_sql)
             ibm_db.bind_param(pstmt, 1, item)
             ibm_db.execute(pstmt)

@@ -1,4 +1,4 @@
-{% extends 'dash_layout.html '%} {% block head %}
+{% extends 'dash_layout.html'%} {% block head %}
 <title>Suppliers</title>
 {% endblock%} {%block body%}
 <h2>Suppliers</h2>
@@ -14,7 +14,7 @@
     <div class="field">
       <label for="input-field">Choose a field :</label>
       <select name="input-field" id="field">
-        <option value="NAME">NAME</option>
+        <option value="SUPPLIER_NAME">NAME</option>
         <option value="LOCATION">LOCATION</option>
       </select>
     </div>
@@ -33,11 +33,12 @@
     </div>
     <div class="field">
       <label class="custom-label" for="quantity"> Enter Order ID : </label>
-      <select name="order-id-select" id="field">
+      <!-- <select name="order-id-select" id="field">
         {% for order_id in order_ids %}
         <option value="{{ order_id }}">{{order_id}}</option>
         {% endfor %}
-      </select>
+      </select> -->
+      <input class="text-inputs" name="order-id-select" type="number" placeholder="Stock ID" />
     </div>
     <div class="field">
       <label class="custom-label" for="location"> Enter Location</label>
